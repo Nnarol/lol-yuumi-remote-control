@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import configparser
 import keyboard
 import pyautogui
@@ -25,18 +27,9 @@ def handle_spell():
     global key_press_duration
 
     spell_action = request.json['action']
-    valid_keys = [
-        config.get('Keys', key) 
-        for key in ['spell_q', 'spell_w', 'spell_e', 'spell_r', 'spell_d', 'spell_f', 'open_shop', 'tab_info', 'go_to_base', 'level_up_q', 'level_up_w', 'level_up_e', 'level_up_r']
-    ]
-
-    if spell_action in valid_keys:
-        keyboard.press(spell_action)
-        time.sleep(key_press_duration)
-        keyboard.release(spell_action)
-    else:
-        return {'error': 'Invalid spell action'}, 400
-
+    keyboard.press(spell_action)
+    time.sleep(key_press_duration)
+    keyboard.release(spell_action)
     return {'success': True}
 
 @app.route('/click', methods=['POST'])
