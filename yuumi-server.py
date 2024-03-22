@@ -22,13 +22,18 @@ yuumi_controls_key_press_duration = config.getfloat('General', 'yuumi_controls_k
 # Duration for key presses
 key_press_duration = yuumi_controls_key_press_duration
 
-@app.route('/spell', methods=['POST'])
-def handle_spell():
+@app.route('/keypress', methods=['POST'])
+def handle_keypress():
     global key_press_duration
 
     spell_action = request.json['action']
     keyboard.press(spell_action)
     time.sleep(key_press_duration)
+    return {'success': True}
+
+@app.route('/keyrelease', methods=['POST'])
+def handle_release():
+    spell_action = request.json['action']
     keyboard.release(spell_action)
     return {'success': True}
 
@@ -53,23 +58,6 @@ def handle_click():
         pyautogui.rightClick()
     else:
         return {'error': 'Invalid mouse button'}, 400
-    return {'success': True}
-
-@app.route('/level', methods=['POST'])
-def handle_level():
-    global key_press_duration
-
-    ability = request.json['ability']
-    print('Leveling up ability')
-    print(ability)
-    if ability in [config.get('Keys', key) for key in ['level_up_q', 'level_up_w', 'level_up_e', 'level_up_r']]:
-        print(f'Leveling up {ability.upper()}')
-        keyboard.press(ability)
-        time.sleep(key_press_duration)
-        keyboard.release(ability)
-    else:
-        return {'error': 'Invalid ability'}, 400
-
     return {'success': True}
 
 @app.route('/connect', methods=['GET'])
